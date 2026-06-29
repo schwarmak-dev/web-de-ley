@@ -1,9 +1,9 @@
-# Tocayos — Sitio + intake de solicitudes
+# Web de Ley — Sitio + intake de solicitudes
 
 Sitio de la consultora de ciberseguridad y cumplimiento de la **Ley 21.719**. Una PYME envía
 una solicitud desde el portal público; al equipo le llega por un **panel con login**.
 
-> La marca ("Tocayos"), el correo y el SLA se configuran en `src/lib/brand.ts`.
+> La marca ("Web de Ley"), el correo y el SLA se configuran en `src/lib/brand.ts`.
 
 ## Arquitectura
 

@@ -1,7 +1,7 @@
 // Identidad del negocio. Cambia estos valores por los tuyos reales.
 export const BRAND = {
-  nombre: "Tocayos",
+  nombre: "Web de Ley",
   tagline: "Ciberseguridad y Ley 21.719 para PYMEs",
-  email: "contacto@tocayos.cl",
+  email: "contacto@webdeley.cl",
   slaHorasHabiles: 48,
 };
