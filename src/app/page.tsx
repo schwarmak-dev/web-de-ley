@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { BRAND } from "@/lib/brand";
 import { obtenerSesion, cerrarSesion } from "@/lib/auth";
 import Diagnostico from "./Diagnostico";
+import HeroArt from "./HeroArt";
+import { IconAlert, IconMail, IconClock, IconDoc, IconLink, IconSearch, IconWrench, IconBook, IconCheck } from "./icons";
 
 export default async function Home() {
   const sesion = await obtenerSesion();
@@ -49,26 +51,36 @@ export default async function Home() {
       )}
 
       {/* HERO */}
-      <section className="hero">
-        <p className="eyebrow">Ley 21.719 · obligatoria desde diciembre de 2026</p>
-        <h1>¿Guardas los datos de tus clientes en un Excel, un cuaderno o por WhatsApp?</h1>
-        <p className="lead">
-          Entonces la nueva Ley de Datos te afecta. Nosotros revisamos tu negocio, te decimos en
-          simple qué te falta y lo dejamos resuelto — sin que tengas que volverte experto en leyes
-          ni gastar una fortuna.
-        </p>
-        <div className="actions">
-          {esUser ? (
-            <>
-              <Link className="btn" href="/estado">Revisar estado de mi solicitud</Link>
-              <Link className="btn btn-ghost" href="/solicitar">Enviar otra solicitud</Link>
-            </>
-          ) : (
-            <>
-              <a className="btn" href="#diagnostico">Haz el test de 1 minuto</a>
-              <Link className="btn btn-ghost" href="/solicitar">Solicitar una revisión</Link>
-            </>
-          )}
+      <section className="hero-dark">
+        <div className="hero-dark-inner">
+          <div className="hero-text">
+            <p className="eyebrow-badge">
+              <IconAlert className="ico" />
+              Ley 21.719 · obligatoria desde diciembre de 2026
+            </p>
+            <h1>¿Guardas los datos de tus clientes en un Excel, un cuaderno o por WhatsApp?</h1>
+            <p className="lead">
+              Entonces la nueva Ley de Datos te afecta. Nosotros revisamos tu negocio, te decimos en
+              simple qué te falta y lo dejamos resuelto — sin que tengas que volverte experto en
+              leyes ni gastar una fortuna.
+            </p>
+            <div className="actions">
+              {esUser ? (
+                <>
+                  <Link className="btn" href="/estado">Revisar estado de mi solicitud</Link>
+                  <Link className="btn btn-ghost" href="/solicitar">Enviar otra solicitud</Link>
+                </>
+              ) : (
+                <>
+                  <a className="btn" href="#diagnostico">Haz el test de 1 minuto</a>
+                  <Link className="btn btn-ghost" href="/solicitar">Solicitar una revisión</Link>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="hero-art">
+            <HeroArt />
+          </div>
         </div>
       </section>
 
@@ -81,18 +93,22 @@ export default async function Home() {
         </p>
         <div className="risks">
           <div className="risk">
+            <div className="risk-ico"><IconMail /></div>
             <h3>Le mandas la lista de clientes al correo equivocado</h3>
             <p>Eso ya es una filtración de datos que estás obligado a reportar. Si no la detectas a tiempo, te expones a sanción.</p>
           </div>
           <div className="risk">
+            <div className="risk-ico"><IconClock /></div>
             <h3>Un cliente te pide borrar sus datos y no sabes qué hacer</h3>
             <p>La ley te da un plazo para responder. Si lo dejas pasar, la persona puede reclamar ante la Agencia.</p>
           </div>
           <div className="risk">
+            <div className="risk-ico"><IconDoc /></div>
             <h3>Pides datos sin avisar para qué los usas</h3>
             <p>Recolectar datos sin una política clara y sin permiso es una infracción directa a la ley.</p>
           </div>
           <div className="risk">
+            <div className="risk-ico"><IconLink /></div>
             <h3>Tu contador o tu software manejan tus datos sin contrato</h3>
             <p>Si un tercero trata datos por ti sin un contrato adecuado, el problema sigue siendo tuyo.</p>
           </div>
@@ -131,22 +147,26 @@ export default async function Home() {
         <p className="section-intro">Un proceso ordenado, de principio a fin, y en simple.</p>
         <div className="services">
           <div className="service">
-            <div className="k">01</div>
+            <div className="service-ico"><IconSearch /></div>
+            <div className="k">Paso 01</div>
             <h3>Revisamos tu negocio</h3>
             <p>Buscamos por dónde podrían entrar o filtrarse los datos de tu empresa.</p>
           </div>
           <div className="service">
-            <div className="k">02</div>
+            <div className="service-ico"><IconWrench /></div>
+            <div className="k">Paso 02</div>
             <h3>Arreglamos lo que falta</h3>
             <p>Corregimos los problemas y cerramos los huecos de seguridad que encontramos.</p>
           </div>
           <div className="service">
-            <div className="k">03</div>
+            <div className="service-ico"><IconBook /></div>
+            <div className="k">Paso 03</div>
             <h3>Te ponemos al día con la ley</h3>
             <p>Te decimos exactamente qué te exige la Ley 21.719 en tu caso, sin tecnicismos.</p>
           </div>
           <div className="service">
-            <div className="k">04</div>
+            <div className="service-ico"><IconCheck /></div>
+            <div className="k">Paso 04</div>
             <h3>Dejamos todo funcionando</h3>
             <p>Tu política, tus permisos y tu canal para responderles a los clientes, listos.</p>
           </div>
