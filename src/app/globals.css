@@ -215,6 +215,19 @@ textarea { min-height: 90px; resize: vertical; }
 }
 .panel-bar .brand { color: #fff; font-size: 1.05rem; }
 .panel-bar .who { font-size: .85rem; color: #c9c1b1; display: flex; align-items: center; gap: .9rem; }
+.panel-bar a { color: #cbc3b3; }
+.panel-bar a:hover { color: #fff; text-decoration: none; }
+.panel-bar .panel-user { color: #8a8275; }
+
+/* Crear usuarios */
+.user-create { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 1.5rem; margin-top: 1.25rem; }
+.user-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 1rem; align-items: end; }
+.user-form label { margin-top: 0; }
+.user-form .btn { margin: 0; white-space: nowrap; height: fit-content; }
+@media (max-width: 720px) {
+  .user-form { grid-template-columns: 1fr; }
+  .user-form .btn { width: 100%; }
+}
 .panel-bar form { display: inline; }
 .btn-mini { background: transparent; border: 1px solid #3a352c; color: #fff; padding: .3rem .75rem; border-radius: 3px; font: inherit; font-size: .82rem; cursor: pointer; }
 .btn-mini:hover { background: #211d17; }

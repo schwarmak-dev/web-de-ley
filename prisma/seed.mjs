@@ -1,9 +1,23 @@
 import { PrismaClient } from "@prisma/client";
+import crypto from "crypto";
 
 const prisma = new PrismaClient();
 const horas = (n) => new Date(Date.now() + n * 3600000);
 
+function hashPassword(pass) {
+  const salt = crypto.randomBytes(16);
+  const hash = crypto.scryptSync(pass, salt, 64);
+  return `${salt.toString("hex")}:${hash.toString("hex")}`;
+}
+
 async function main() {
+  // Cuenta de cliente demo (el admin puede crear más desde el panel).
+  await prisma.appUser.upsert({
+    where: { usuario: "user" },
+    update: {},
+    create: { usuario: "user", nombre: "Cliente Demo", hash: hashPassword("user123") },
+  });
+
   const ejemplos = [
     {
       empresa: "Ferretería San Pedro Ltda.",

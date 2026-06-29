@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { obtenerSesion, cerrarSesion } from "@/lib/auth";
 import { BRAND } from "@/lib/brand";
@@ -19,7 +20,9 @@ export default async function PanelLayout({ children }: { children: ReactNode })
       <header className="panel-bar">
         <span className="brand">{BRAND.nombre} · Panel</span>
         <span className="who">
-          {sesion.usuario} · {sesion.rol}
+          <Link href="/panel">Solicitudes</Link>
+          <Link href="/panel/usuarios">Usuarios</Link>
+          <span className="panel-user">{sesion.usuario}</span>
           <form action={salir}>
             <button className="btn-mini" type="submit">Salir</button>
           </form>

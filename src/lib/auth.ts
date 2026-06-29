@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import crypto from "crypto";
+import { prisma } from "@/lib/prisma";
 
 // --- Secreto de sesión ---
 const DEFAULT_SECRET = "dev-secret-cambia-esto-en-produccion";
@@ -20,18 +21,14 @@ function getSecret(): string {
 
 export type Rol = "admin" | "user";
 
-// Credenciales del equipo. Las contraseñas se guardan como hash scrypt ("salt:hash").
-// Para generar el hash de una contraseña nueva: `npm run hash -- <contraseña>`.
-const USUARIOS: Record<string, { hash: string; rol: Rol }> = {
-  admin: {
-    hash: "e8c5fe86f36af590e8c083d5ab1e8c05:e32b3435674bd7e54f20f989a9e5d82d915a3d8e2cc9af8af513d6c154a48d73abffc511983716f4598bfcb705a2beddc5e8c2ced659d5dae114267871def518",
-    rol: "admin",
-  },
-  user: {
-    hash: "01de929ba59b78a4ad8732ff6ad841fa:45764c24b45c2585196fc29029082573d6d94eccf603279111f76d26ed74403192e375e02512974ec22638e3c9c210135e3864498db5cb953707bf5c93a4f9ea",
-    rol: "user",
-  },
+// El admin del equipo es fijo (hardcoded). Las cuentas de clientes (rol "user")
+// las crea el admin y viven en la base de datos (tabla AppUser).
+const ADMIN = {
+  usuario: "admin",
+  hash: "e8c5fe86f36af590e8c083d5ab1e8c05:e32b3435674bd7e54f20f989a9e5d82d915a3d8e2cc9af8af513d6c154a48d73abffc511983716f4598bfcb705a2beddc5e8c2ced659d5dae114267871def518",
 };
+// Hash señuelo para correr scrypt aunque el usuario no exista (evita filtrar por tiempo).
+const DUMMY_HASH = ADMIN.hash;
 
 // Verifica una contraseña contra un hash "salt:hash" en tiempo constante.
 function verificarPassword(pass: string, almacenado: string): boolean {
@@ -42,12 +39,25 @@ function verificarPassword(pass: string, almacenado: string): boolean {
   return derivado.length === esperado.length && crypto.timingSafeEqual(derivado, esperado);
 }
 
-export function validarCredenciales(usuario: string, pass: string): Rol | null {
-  const u = USUARIOS[usuario];
-  // Calculamos siempre un scrypt (aunque el usuario no exista) para no filtrar por tiempo.
-  const hash = u?.hash ?? "00:" + "0".repeat(128);
-  const ok = verificarPassword(pass, hash);
-  return u && ok ? u.rol : null;
+// Genera un hash scrypt para guardar una contraseña nueva.
+export function hashPassword(pass: string): string {
+  const salt = crypto.randomBytes(16);
+  const hash = crypto.scryptSync(pass, salt, 64);
+  return `${salt.toString("hex")}:${hash.toString("hex")}`;
+}
+
+export async function validarCredenciales(usuario: string, pass: string): Promise<Rol | null> {
+  // Admin fijo del equipo
+  if (usuario === ADMIN.usuario) {
+    return verificarPassword(pass, ADMIN.hash) ? "admin" : null;
+  }
+  // Cuentas de clientes en la base
+  const u = await prisma.appUser.findUnique({ where: { usuario } });
+  if (!u) {
+    verificarPassword(pass, DUMMY_HASH); // tiempo constante
+    return null;
+  }
+  return verificarPassword(pass, u.hash) ? "user" : null;
 }
 
 // --- Firma de cookie (HMAC) ---

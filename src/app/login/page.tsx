@@ -1,7 +1,15 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { validarCredenciales, crearSesion, obtenerSesion, destinoPorRol } from "@/lib/auth";
+import {
+  intentosFallidosRecientes,
+  registrarIntentoFallido,
+  limpiarIntentos,
+  LIMITE_INTENTOS,
+  VENTANA_MINUTOS,
+} from "@/lib/login-throttle";
 
 export default async function LoginPage({
   searchParams,
@@ -16,8 +24,23 @@ export default async function LoginPage({
     "use server";
     const usuario = String(formData.get("usuario") ?? "").trim();
     const pass = String(formData.get("pass") ?? "");
-    const rol = validarCredenciales(usuario, pass);
-    if (!rol) redirect("/login?error=1");
+
+    // Límite de intentos: por IP, máximo LIMITE_INTENTOS en VENTANA_MINUTOS.
+    const cabeceras = await headers();
+    const ip = cabeceras.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+    const clave = `login:${ip}`;
+
+    if ((await intentosFallidosRecientes(clave)) >= LIMITE_INTENTOS) {
+      redirect("/login?error=rate");
+    }
+
+    const rol = await validarCredenciales(usuario, pass);
+    if (!rol) {
+      await registrarIntentoFallido(clave);
+      redirect("/login?error=1");
+    }
+
+    await limpiarIntentos(clave);
     await crearSesion(usuario, rol);
     redirect(destinoPorRol(rol));
   }
@@ -59,7 +82,13 @@ export default async function LoginPage({
             <label htmlFor="pass">Contraseña</label>
             <input id="pass" name="pass" type="password" autoComplete="current-password" required />
 
-            {error && <div className="err">Usuario o contraseña incorrectos.</div>}
+            {error === "rate" ? (
+              <div className="err">
+                Demasiados intentos fallidos. Espera {VENTANA_MINUTOS} minutos e inténtalo de nuevo.
+              </div>
+            ) : error ? (
+              <div className="err">Usuario o contraseña incorrectos.</div>
+            ) : null}
 
             <button className="btn submit" type="submit">Ingresar</button>
           </form>

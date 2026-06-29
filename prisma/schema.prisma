@@ -31,3 +31,21 @@ model Solicitud {
   deadlineAt DateTime // createdAt + 48 horas hábiles
   resueltoAt DateTime?
 }
+
+// Cuenta de cliente (rol "user") creada por el admin.
+model AppUser {
+  id        String   @id @default(cuid())
+  usuario   String   @unique
+  hash      String // contraseña como hash scrypt "salt:hash"
+  nombre    String?
+  createdAt DateTime @default(now())
+}
+
+// Registro de intentos de login para el límite de 5 cada 10 minutos.
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  clave     String // identificador del intento (IP)
+  createdAt DateTime @default(now())
+
+  @@index([clave, createdAt])
+}
