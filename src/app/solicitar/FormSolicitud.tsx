@@ -43,6 +43,12 @@ export default function FormSolicitud() {
 
   return (
     <form onSubmit={onSubmit}>
+      {/* Honeypot anti-spam: invisible para humanos, los bots lo rellenan. */}
+      <div className="hp" aria-hidden="true">
+        <label htmlFor="website">No llenar este campo</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <label htmlFor="empresa">Empresa o nombre</label>
       <input id="empresa" name="empresa" required />
 
