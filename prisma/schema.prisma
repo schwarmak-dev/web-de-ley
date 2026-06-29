@@ -1,12 +1,12 @@
 // Modelo de datos — Intake de solicitudes de servicio (ciberseguridad / Ley 21.719).
-// Dev: SQLite. Producción: cambiar provider a "postgresql".
+// Base: PostgreSQL (Neon). La conexión se toma de DATABASE_URL.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
