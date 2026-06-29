@@ -1,0 +1,33 @@
+// Modelo de datos — Intake de solicitudes de servicio (ciberseguridad / Ley 21.719).
+// Dev: SQLite. Producción: cambiar provider a "postgresql".
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Solicitud que una PYME (o persona) envía al equipo desde el portal público.
+model Solicitud {
+  id          String   @id @default(cuid())
+  empresa     String // nombre de la empresa o persona
+  rut         String? // empresa o personal
+  contacto    String // nombre de quien escribe
+  email       String
+  telefono    String?
+
+  // REVISION | SOLUCION | DIAGNOSTICO | IMPLEMENTACION | OTRA
+  tipo    String
+  detalle String?
+
+  // NUEVA | EN_PROCESO | RESPONDIDA
+  estado      String  @default("NUEVA")
+  comprobante String  @unique
+
+  createdAt  DateTime  @default(now())
+  deadlineAt DateTime // createdAt + 48 horas hábiles
+  resueltoAt DateTime?
+}
