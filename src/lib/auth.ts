@@ -91,10 +91,16 @@ export async function cerrarSesion(): Promise<void> {
 export async function obtenerSesion(): Promise<{ usuario: string; rol: Rol } | null> {
   const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;
-  const valor = verificar(token);
-  if (!valor) return null;
-  const [usuario, rol] = valor.split(":");
-  return { usuario, rol: rol as Rol };
+  try {
+    const valor = verificar(token);
+    if (!valor) return null;
+    const [usuario, rol] = valor.split(":");
+    return { usuario, rol: rol as Rol };
+  } catch {
+    // Si el secreto no está configurado o la cookie es inválida, tratamos como "sin sesión"
+    // en vez de romper páginas públicas como la portada.
+    return null;
+  }
 }
 
 // Destino tras iniciar sesión según el rol.
