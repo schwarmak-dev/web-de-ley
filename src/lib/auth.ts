@@ -3,17 +3,20 @@ import crypto from "crypto";
 
 // --- Secreto de sesión ---
 const DEFAULT_SECRET = "dev-secret-cambia-esto-en-produccion";
-const RAW_SECRET = process.env.AUTH_SECRET;
-
-// En producción exigimos un secreto propio y suficientemente largo. Falla rápido.
-if (
-  process.env.NODE_ENV === "production" &&
-  (!RAW_SECRET || RAW_SECRET === DEFAULT_SECRET || RAW_SECRET.length < 32)
-) {
-  throw new Error("AUTH_SECRET debe estar definido (mínimo 32 caracteres) en producción.");
-}
-const SECRET = RAW_SECRET ?? DEFAULT_SECRET;
 const COOKIE = "sesion";
+
+// Obtiene el secreto de sesión. Se valida en tiempo de EJECUCIÓN (no al importar el módulo)
+// para no romper el build de producción: la variable se inyecta al desplegar, no al compilar.
+function getSecret(): string {
+  const raw = process.env.AUTH_SECRET;
+  if (process.env.NODE_ENV === "production") {
+    if (!raw || raw === DEFAULT_SECRET || raw.length < 32) {
+      throw new Error("AUTH_SECRET debe estar definido (mínimo 32 caracteres) en producción.");
+    }
+    return raw;
+  }
+  return raw ?? DEFAULT_SECRET;
+}
 
 export type Rol = "admin" | "user";
 
@@ -49,7 +52,7 @@ export function validarCredenciales(usuario: string, pass: string): Rol | null {
 
 // --- Firma de cookie (HMAC) ---
 function hmac(valor: string): string {
-  return crypto.createHmac("sha256", SECRET).update(valor).digest("hex");
+  return crypto.createHmac("sha256", getSecret()).update(valor).digest("hex");
 }
 function firmar(valor: string): string {
   return `${valor}.${hmac(valor)}`;
