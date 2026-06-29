@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BRAND } from "@/lib/brand";
 import { obtenerSesion, cerrarSesion } from "@/lib/auth";
+import Diagnostico from "./Diagnostico";
 
 export default async function Home() {
   const sesion = await obtenerSesion();
@@ -22,8 +23,9 @@ export default async function Home() {
           <small>{BRAND.tagline}</small>
         </span>
         <div className="nav-links">
-          <a href="#riesgos">El riesgo</a>
-          <a href="#servicios">Qué hacemos</a>
+          <a href="#diagnostico" className="hide-mobile">El test</a>
+          <a href="#nosotros" className="hide-mobile">Nosotros</a>
+          <a href="#preguntas" className="hide-mobile">Preguntas</a>
           {esUser && <Link href="/estado">Mi solicitud</Link>}
           {esAdmin && <Link href="/panel">Panel</Link>}
           {sesion ? (
@@ -31,13 +33,12 @@ export default async function Home() {
               <button className="btn-mini-dark" type="submit">Salir</button>
             </form>
           ) : (
-            <Link href="/login">Acceso</Link>
+            <Link href="/login" className="hide-mobile">Acceso</Link>
           )}
           <Link className="btn" href="/solicitar">Solicitar</Link>
         </div>
       </nav>
 
-      {/* Saludo al cliente con sesión */}
       {esUser && (
         <div className="welcome">
           <span>
@@ -49,12 +50,12 @@ export default async function Home() {
 
       {/* HERO */}
       <section className="hero">
-        <p className="eyebrow">Ley 21.719 · rige desde el 1 de diciembre de 2026</p>
-        <h1>Revisamos tu empresa, te decimos qué te falta y lo dejamos resuelto.</h1>
+        <p className="eyebrow">Ley 21.719 · obligatoria desde diciembre de 2026</p>
+        <h1>¿Guardas los datos de tus clientes en un Excel, un cuaderno o por WhatsApp?</h1>
         <p className="lead">
-          La nueva Ley de Protección de Datos llega con multas para quien no la cumpla. Nosotros
-          encontramos tus puntos débiles y los arreglamos, en lenguaje claro y sin que tengas que
-          contratar a un estudio de abogados caro.
+          Entonces la nueva Ley de Datos te afecta. Nosotros revisamos tu negocio, te decimos en
+          simple qué te falta y lo dejamos resuelto — sin que tengas que volverte experto en leyes
+          ni gastar una fortuna.
         </p>
         <div className="actions">
           {esUser ? (
@@ -64,8 +65,8 @@ export default async function Home() {
             </>
           ) : (
             <>
-              <Link className="btn" href="/solicitar">Solicitar una revisión</Link>
-              <a className="btn btn-ghost" href="#riesgos">Ver qué arriesgo</a>
+              <a className="btn" href="#diagnostico">Haz el test de 1 minuto</a>
+              <Link className="btn btn-ghost" href="/solicitar">Solicitar una revisión</Link>
             </>
           )}
         </div>
@@ -73,89 +74,143 @@ export default async function Home() {
 
       {/* RIESGOS */}
       <section className="section" id="riesgos">
-        <h2>Lo que hoy deja expuesta a tu PYME</h2>
+        <h2>Esto le puede pasar a tu negocio</h2>
         <p className="section-intro">
-          No hace falta ser una empresa grande para estar en riesgo. Si manejas datos de clientes o
-          trabajadores —y todos lo hacen—, estas son las situaciones que te pueden costar caro.
+          No hay que ser una empresa grande para meterse en problemas. Si manejas datos de clientes
+          o trabajadores —y todos lo hacen—, mira estos casos.
         </p>
         <div className="risks">
           <div className="risk">
-            <h3>Un cliente pide sus datos y no alcanzas a responder</h3>
-            <p>La ley da plazos para responder. Si no lo haces, la persona reclama ante la Agencia y te sancionan.</p>
+            <h3>Le mandas la lista de clientes al correo equivocado</h3>
+            <p>Eso ya es una filtración de datos que estás obligado a reportar. Si no la detectas a tiempo, te expones a sanción.</p>
           </div>
           <div className="risk">
-            <h3>Una filtración que ni sabías que tenías</h3>
-            <p>Un correo mal enviado o un sistema vulnerado obliga a reportar. Primero hay que detectarlo a tiempo.</p>
+            <h3>Un cliente te pide borrar sus datos y no sabes qué hacer</h3>
+            <p>La ley te da un plazo para responder. Si lo dejas pasar, la persona puede reclamar ante la Agencia.</p>
           </div>
           <div className="risk">
-            <h3>Recolectar datos sin permiso ni política</h3>
-            <p>Pedir datos sin informar para qué y sin una política publicada es una infracción directa.</p>
+            <h3>Pides datos sin avisar para qué los usas</h3>
+            <p>Recolectar datos sin una política clara y sin permiso es una infracción directa a la ley.</p>
           </div>
           <div className="risk">
-            <h3>Proveedores que tocan tus datos sin contrato</h3>
-            <p>Tu contador, tu agencia o tu software tratan datos por ti. Sin contrato, el problema sigue siendo tuyo.</p>
+            <h3>Tu contador o tu software manejan tus datos sin contrato</h3>
+            <p>Si un tercero trata datos por ti sin un contrato adecuado, el problema sigue siendo tuyo.</p>
           </div>
         </div>
       </section>
 
+      {/* DIAGNÓSTICO INTERACTIVO */}
+      <section className="section" id="diagnostico">
+        <h2>¿Qué tan expuesto estás? Averígualo en 1 minuto</h2>
+        <p className="section-intro">
+          Responde estas 4 preguntas y te mostramos tu nivel de riesgo al instante. Sin registro,
+          sin compromiso.
+        </p>
+        <Diagnostico />
+      </section>
+
       {/* MULTAS */}
       <section className="section">
-        <h2>Lo que cuesta no hacer nada</h2>
+        <h2>Y si no haces nada, ¿cuánto te puede costar?</h2>
         <p className="section-intro">Las multas se calculan en UTM y suben según la gravedad de la falta.</p>
         <div className="fines">
-          <div className="fine"><div className="n">5.000 UTM</div><div className="l">Infracción leve</div></div>
-          <div className="fine"><div className="n">10.000 UTM</div><div className="l">Infracción grave</div></div>
-          <div className="fine"><div className="n">20.000 UTM</div><div className="l">Infracción gravísima</div></div>
-          <div className="fine"><div className="n">2% – 4%</div><div className="l">De tus ingresos anuales por reincidencia</div></div>
+          <div className="fine"><div className="n">5.000 UTM</div><div className="l">Falta leve</div></div>
+          <div className="fine"><div className="n">10.000 UTM</div><div className="l">Falta grave</div></div>
+          <div className="fine"><div className="n">20.000 UTM</div><div className="l">Falta gravísima</div></div>
+          <div className="fine"><div className="n">2% – 4%</div><div className="l">De tus ingresos al año si reincides</div></div>
         </div>
         <p className="note">
-          Las empresas que califican como pequeñas reciben una amonestación escrita en su primera
-          falta, pero quedan igualmente obligadas a corregir. Adelantarse sale mucho más barato que
-          reaccionar después.
+          Si tu empresa es pequeña, en la primera falta recibes una amonestación en vez de multa —
+          pero igual tienes que corregir. Adelantarse siempre sale más barato que reaccionar después.
         </p>
       </section>
 
       {/* SERVICIOS */}
       <section className="section" id="servicios">
         <h2>Cómo lo resolvemos contigo</h2>
-        <p className="section-intro">Un proceso ordenado, de principio a fin, sin tecnicismos.</p>
+        <p className="section-intro">Un proceso ordenado, de principio a fin, y en simple.</p>
         <div className="services">
           <div className="service">
             <div className="k">01</div>
-            <h3>Revisión de vulnerabilidades</h3>
+            <h3>Revisamos tu negocio</h3>
             <p>Buscamos por dónde podrían entrar o filtrarse los datos de tu empresa.</p>
           </div>
           <div className="service">
             <div className="k">02</div>
-            <h3>Solución de problemas</h3>
-            <p>Corregimos lo que encontramos y cerramos los huecos de seguridad.</p>
+            <h3>Arreglamos lo que falta</h3>
+            <p>Corregimos los problemas y cerramos los huecos de seguridad que encontramos.</p>
           </div>
           <div className="service">
             <div className="k">03</div>
-            <h3>Diagnóstico de la ley</h3>
-            <p>Te decimos exactamente qué exige la Ley 21.719 en tu caso y qué te falta.</p>
+            <h3>Te ponemos al día con la ley</h3>
+            <p>Te decimos exactamente qué te exige la Ley 21.719 en tu caso, sin tecnicismos.</p>
           </div>
           <div className="service">
             <div className="k">04</div>
-            <h3>Implementación</h3>
-            <p>Dejamos funcionando tu política, tus permisos y tu canal de respuesta a clientes.</p>
+            <h3>Dejamos todo funcionando</h3>
+            <p>Tu política, tus permisos y tu canal para responderles a los clientes, listos.</p>
           </div>
+        </div>
+      </section>
+
+      {/* QUIÉNES SOMOS */}
+      <section className="section" id="nosotros">
+        <h2>Quiénes somos</h2>
+        <div className="nosotros">
+          <p>
+            Detrás de {BRAND.nombre} hay dos desarrolladores chilenos. Ni un call center ni una
+            consultora gigante: nos hablas directo a nosotros, y nosotros mismos revisamos y
+            arreglamos tu negocio.
+          </p>
+          <p>
+            Nos metimos en esto porque vimos que muchas PYMEs van a quedar expuestas con la nueva ley
+            sin siquiera saberlo, y que las grandes consultoras cobran cifras imposibles. Hablamos en
+            simple, no en “legalés”, y te explicamos cada paso.
+          </p>
+          {/* TIP: agreguen aquí sus nombres y una foto para más confianza. */}
+        </div>
+      </section>
+
+      {/* PREGUNTAS FRECUENTES */}
+      <section className="section" id="preguntas">
+        <h2>Preguntas frecuentes</h2>
+        <div className="faq">
+          <details>
+            <summary>¿Esto me aplica si tengo una empresa chica?</summary>
+            <p>Sí. La ley aplica a cualquiera que maneje datos de personas, sin importar el tamaño. Las empresas pequeñas tienen un trato más blando en la primera falta, pero igual deben cumplir.</p>
+          </details>
+          <details>
+            <summary>¿Cuánto cuesta?</summary>
+            <p>Depende de tu negocio, pero la idea es justamente que te salga mucho más barato que una consultora grande o que una multa. Te damos un precio claro después de revisar, sin sorpresas.</p>
+          </details>
+          <details>
+            <summary>¿Cuánto se demora?</summary>
+            <p>Partimos con un diagnóstico rápido. La implementación depende de qué te falte, pero te damos plazos claros desde el primer día.</p>
+          </details>
+          <details>
+            <summary>¿Necesito saber de tecnología o de leyes?</summary>
+            <p>Para nada. Esa es justamente nuestra pega. Tú nos cuentas cómo funciona tu negocio y nosotros nos encargamos del resto.</p>
+          </details>
+          <details>
+            <summary>¿Y si ya tuve un problema con datos de clientes?</summary>
+            <p>Con más razón conviene actuar. Te ayudamos a contenerlo, a cumplir con lo que exige la ley y a dejar todo en regla.</p>
+          </details>
         </div>
       </section>
 
       {/* BANDA CTA */}
       <section className="band">
-        <h2>{esUser ? "¿Necesitas otra revisión?" : "Pide tu revisión hoy"}</h2>
+        <h2>{esUser ? "¿Necesitas otra revisión?" : "Demos el primer paso"}</h2>
         <p>
           Cuéntanos de tu empresa y qué te preocupa. Te respondemos en 48 horas hábiles, sin
-          compromiso.
+          compromiso y sin letra chica.
         </p>
         <div className="actions">
           <Link className="btn" href="/solicitar">Solicitar una revisión</Link>
           {esUser ? (
             <Link className="btn btn-ghost" href="/estado">Revisar estado de mi solicitud</Link>
           ) : (
-            <Link className="btn btn-ghost" href="/login">Acceso del equipo</Link>
+            <a className="btn btn-ghost" href="#diagnostico">Hacer el test primero</a>
           )}
         </div>
       </section>

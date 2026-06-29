@@ -203,3 +203,69 @@ th { color: var(--muted); font-weight: 600; font-size: .72rem; text-transform: u
 .ghost:hover { background: var(--bg); }
 .muted { color: var(--muted); }
 code { font-size: .85rem; color: var(--text); }
+
+/* ---- Diagnóstico interactivo ---- */
+.diag { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 1.5rem; }
+.diag-q { padding: 1rem 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.diag-q:first-child { padding-top: 0; }
+.diag-pregunta { margin: 0; font-weight: 500; display: flex; gap: .6rem; align-items: flex-start; flex: 1; min-width: 240px; }
+.diag-num { flex: 0 0 24px; height: 24px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); color: var(--accent-ink); font-weight: 700; font-size: .8rem; display: grid; place-items: center; }
+.diag-opts { display: flex; gap: .5rem; }
+.diag-opts button { margin: 0; padding: .45rem 1.1rem; border: 1px solid var(--line); background: #fff; color: var(--text); border-radius: 4px; font: inherit; font-weight: 600; cursor: pointer; }
+.diag-opts button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.diag .submit { width: 100%; }
+.diag .submit:disabled { background: #c9c1b1; cursor: not-allowed; }
+
+.diag-result { border-radius: 6px; padding: 1.75rem; border: 1px solid var(--line); border-left-width: 5px; background: var(--paper); }
+.diag-result h3 { font-size: 1.5rem; margin: .5rem 0 .5rem; }
+.diag-result p { margin: 0 0 .5rem; color: var(--text); }
+.diag-detalle { color: var(--muted) !important; font-size: .9rem; }
+.diag-tag { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: var(--muted); }
+.diag-alto { border-left-color: var(--danger); }
+.diag-alto h3 { color: var(--danger); }
+.diag-medio { border-left-color: #b67410; }
+.diag-medio h3 { color: #b67410; }
+.diag-bajo { border-left-color: var(--accent); }
+.diag-bajo h3 { color: var(--accent-ink); }
+.diag-cta { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 1.25rem; }
+.diag-cta .btn { margin: 0; }
+
+/* ---- Quiénes somos ---- */
+.nosotros { max-width: 46rem; }
+.nosotros p { font-size: 1.05rem; color: var(--text); margin: 0 0 1rem; }
+
+/* ---- Preguntas frecuentes ---- */
+.faq details { border: 1px solid var(--line); border-radius: 5px; background: var(--paper); margin-bottom: .75rem; }
+.faq summary { padding: 1rem 1.25rem; font-weight: 600; color: var(--ink); cursor: pointer; list-style: none; position: relative; padding-right: 2.5rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%); font-size: 1.3rem; color: var(--accent); font-weight: 400; }
+.faq details[open] summary::after { content: "−"; }
+.faq details[open] summary { border-bottom: 1px solid var(--line); }
+.faq details p { margin: 0; padding: 1rem 1.25rem; color: var(--muted); }
+
+/* ---- Responsivo móvil ---- */
+@media (max-width: 640px) {
+  .container { padding: 0 1.1rem; }
+  .nav { flex-wrap: wrap; gap: .5rem .9rem; padding: .9rem 0; }
+  .nav-links { gap: 1rem; font-size: .88rem; }
+  .nav-links .hide-mobile { display: none; }
+  .hero { padding: 2.25rem 0 1.5rem; }
+  .hero h1 { font-size: 1.85rem; }
+  .hero p.lead { font-size: 1.05rem; }
+  .actions { flex-direction: column; align-items: stretch; }
+  .actions .btn { text-align: center; }
+  .section { padding: 2rem 0; }
+  .section h2 { font-size: 1.4rem; }
+  .section-intro { font-size: .98rem; }
+  .band { padding: 1.75rem 1.25rem; }
+  .band .actions { flex-direction: column; }
+  .fine .n { font-size: 1.35rem; }
+  .welcome { flex-direction: column; align-items: flex-start; }
+  .diag { padding: 1.1rem; }
+  .diag-q { flex-direction: column; align-items: flex-start; gap: .65rem; }
+  .diag-opts { width: 100%; }
+  .diag-opts button { flex: 1; }
+  .diag-cta { flex-direction: column; }
+  .diag-cta .btn { text-align: center; }
+  .nosotros p, .hero p.lead { font-size: 1rem; }
+}
